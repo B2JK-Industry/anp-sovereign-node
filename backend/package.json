@@ -1,0 +1,19 @@
+{
+  "name": "anp-backend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Express backend for the sovereign ANP node",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.14.0",
+    "ethers": "^6.15.0",
+    "express": "^5.1.0"
+  }
+}
