@@ -934,4 +934,73 @@ h3 {
   .step::after {
     display: none;
   }
+
+  .metric-panel {
+    padding: 12px 14px;
+  }
+
+  .metric-panel .metric-label {
+    font-size: 0.72rem;
+  }
+
+  .metric-panel strong {
+    font-size: 1.2rem;
+  }
+
+  .stepper {
+    gap: 6px;
+  }
+
+  .step-label {
+    font-size: 0.68rem;
+  }
+}
+
+/* ─── Loading overlay ──────────────────────────────────────────────────────── */
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: var(--bg);
+  transition: opacity 0.4s ease;
+}
+
+.loading-overlay.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--line);
+  border-top-color: var(--orange);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: var(--muted);
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+}
+
+/* ─── Storage badge variants ───────────────────────────────────────────────── */
+
+.ghost-chip-ready {
+  color: var(--green);
+}
+
+.ghost-chip-warning {
+  color: var(--gold);
 }

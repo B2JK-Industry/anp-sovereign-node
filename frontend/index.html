@@ -77,6 +77,7 @@
             Settlement idle
           </span>
           <span id="last-updated" class="ghost-chip">Waiting for sync</span>
+          <span id="storage-badge" class="ghost-chip">Storage loading</span>
         </div>
 
         <div class="metric-row">
@@ -180,6 +181,11 @@
           <pre id="evidence-json" class="evidence-json"></pre>
         </div>
       </div>
+    </div>
+
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Connecting to sovereign node...</p>
     </div>
 
     <script src="./app.js" defer></script>

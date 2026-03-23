@@ -41,7 +41,9 @@ const elements = {
   evidenceSwitcher: document.querySelector("#evidence-switcher"),
   evidenceMarket: document.querySelector("#evidence-market"),
   evidenceJson: document.querySelector("#evidence-json"),
-  closeEvidenceButton: document.querySelector("#close-evidence")
+  closeEvidenceButton: document.querySelector("#close-evidence"),
+  storageBadge: document.querySelector("#storage-badge"),
+  loadingOverlay: document.querySelector("#loading-overlay")
 };
 
 const state = {
@@ -1162,6 +1164,21 @@ function renderStatus(status, snapshot, projects, listings) {
   elements.reputationScore.textContent = `${reputation.score}`;
   elements.reputationSummary.textContent = reputation.summary;
   elements.lastUpdated.textContent = `Updated ${formatTimestamp(status.timestamp)}`;
+
+  if (elements.storageBadge) {
+    const vp = status.storage && status.storage.vaultPath || "";
+    if (vp.startsWith("libsql://")) {
+      elements.storageBadge.textContent = "Persistent storage (Turso)";
+      elements.storageBadge.className = "ghost-chip ghost-chip-ready";
+    } else if (vp.startsWith("/tmp")) {
+      elements.storageBadge.textContent = "Ephemeral storage (/tmp)";
+      elements.storageBadge.className = "ghost-chip ghost-chip-warning";
+    } else {
+      elements.storageBadge.textContent = "Local storage";
+      elements.storageBadge.className = "ghost-chip";
+    }
+  }
+
   elements.metricProjects.textContent = String(projects.length);
   elements.metricOpportunities.textContent = String(listings.length);
   elements.metricAttestations.textContent = String(vaultCounts.reputationAttestations || 0);
@@ -1778,7 +1795,10 @@ elements.refreshButton.addEventListener("click", async () => {
 
 elements.fetchListingsButton.addEventListener("click", async () => {
   try {
-    await withBusyButton(elements.fetchListingsButton, loadDashboard);
+    await withBusyButton(elements.fetchListingsButton, async () => {
+      await fetchJson("/api/anp/peers/sync", { method: "POST" }).catch(() => ({}));
+      await loadDashboard();
+    });
   } catch (error) {
     setFeedback(error.message, true);
   }
@@ -1787,7 +1807,11 @@ elements.fetchListingsButton.addEventListener("click", async () => {
 elements.loadDemoButton.addEventListener("click", async () => {
   try {
     await withBusyButton(elements.loadDemoButton, loadDemoData);
+    elements.loadDemoButton.textContent = "Demo loaded";
+    setTimeout(() => { elements.loadDemoButton.textContent = "Load demo scenario"; }, 2000);
   } catch (error) {
+    elements.loadDemoButton.textContent = "Failed";
+    setTimeout(() => { elements.loadDemoButton.textContent = "Load demo scenario"; }, 2000);
     setFeedback(error.message, true);
   }
 });
@@ -1848,9 +1872,18 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-loadDashboard().catch((error) => {
-  setFeedback(error.message, true);
-});
+loadDashboard()
+  .then(() => {
+    if (elements.loadingOverlay) {
+      elements.loadingOverlay.classList.add("is-hidden");
+    }
+  })
+  .catch((error) => {
+    if (elements.loadingOverlay) {
+      elements.loadingOverlay.classList.add("is-hidden");
+    }
+    setFeedback(error.message, true);
+  });
 
 window.setInterval(() => {
   loadDashboard().catch((error) => {
