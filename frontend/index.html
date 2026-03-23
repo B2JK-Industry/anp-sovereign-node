@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANP Sovereign Node</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="command-center">
+        <div class="command-glow command-glow-left"></div>
+        <div class="command-glow command-glow-right"></div>
+
+        <div class="command-grid">
+          <div class="command-copy">
+            <p class="eyebrow">The Synthesis / Sovereign Mission Control</p>
+            <h1>Run every negotiation like an autonomous operation room.</h1>
+            <p class="lead">
+              Trace live opportunities from discovery to signed evidence, settlement readiness,
+              and work delivery. Every card is a cryptographic timeline, not just a log line.
+            </p>
+
+            <div class="action-row">
+              <button id="refresh-status" class="button button-primary" type="button">
+                Refresh telemetry
+              </button>
+              <button id="fetch-listings" class="button" type="button">
+                Sync listings
+              </button>
+              <button id="load-demo" class="button button-secondary" type="button">
+                Load demo scenario
+              </button>
+            </div>
+
+            <div id="mode-banner" class="mode-banner">
+              Waiting for discovery mode diagnostics.
+            </div>
+          </div>
+
+          <div class="signal-stack">
+            <article class="signal-panel signal-wallet">
+              <div class="panel-headline">
+                <span class="panel-kicker">Owner's Command Center</span>
+                <span id="wallet-chip" class="status-pill status-neutral">Wallet syncing</span>
+              </div>
+              <strong id="wallet-power" class="signal-number">BASE LINK IDLE</strong>
+              <p id="wallet-address" class="signal-address">Loading wallet address...</p>
+              <p id="wallet-meta" class="signal-copy">Waiting for runtime data from the node.</p>
+            </article>
+
+            <article class="signal-panel signal-reputation">
+              <div class="panel-headline">
+                <span class="panel-kicker">Current Reputation Score</span>
+                <span id="reputation-chip" class="status-pill status-neutral">Calibrating</span>
+              </div>
+              <strong id="reputation-score" class="signal-number">--</strong>
+              <p id="reputation-summary" class="signal-copy">
+                Reputation will be derived from vault attestations and completed ACP jobs.
+              </p>
+            </article>
+          </div>
+        </div>
+
+        <div class="status-ribbon">
+          <span id="hero-wallet-badge" class="status-pill status-neutral">Wallet loading</span>
+          <span id="hero-discovery-badge" class="status-pill status-warning">
+            Discovery offline
+          </span>
+          <span id="hero-settlement-badge" class="status-pill status-warning">
+            Settlement idle
+          </span>
+          <span id="last-updated" class="ghost-chip">Waiting for sync</span>
+        </div>
+
+        <div class="metric-row">
+          <article class="metric-panel">
+            <span class="metric-label">Tracked missions</span>
+            <strong id="metric-projects">0</strong>
+          </article>
+          <article class="metric-panel">
+            <span class="metric-label">Open opportunities</span>
+            <strong id="metric-opportunities">0</strong>
+          </article>
+          <article class="metric-panel">
+            <span class="metric-label">Attestations</span>
+            <strong id="metric-attestations">0</strong>
+          </article>
+          <article class="metric-panel">
+            <span class="metric-label">Manual pauses</span>
+            <strong id="metric-human-pauses">0</strong>
+          </article>
+        </div>
+
+        <p id="mission-summary" class="mission-summary">
+          Waiting for vault telemetry and discovery signals.
+        </p>
+      </header>
+
+      <main class="main-grid">
+        <section class="panel workflow-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Lifecycle Visualizer</p>
+              <h2>Negotiated Projects</h2>
+            </div>
+            <span id="project-count" class="ghost-chip">0 missions</span>
+          </div>
+
+          <div id="project-board" class="project-board">
+            <p class="empty-state">Sync the node to build your negotiation mission board.</p>
+          </div>
+        </section>
+
+        <aside class="panel intervention-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Action Sidebar</p>
+              <h2>Manual Interventions</h2>
+            </div>
+            <span id="intervention-count" class="ghost-chip">0 waiting</span>
+          </div>
+
+          <div id="manual-interventions" class="intervention-list">
+            <p class="empty-state">No human pauses waiting for a decision.</p>
+          </div>
+        </aside>
+      </main>
+
+      <section class="telemetry-grid">
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Network Telemetry</p>
+              <h2>Activity Stream</h2>
+            </div>
+          </div>
+          <div id="activity-feed" class="activity-feed">
+            <p class="empty-state">No activity loaded yet.</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Response Buffer</p>
+              <h2>API Feedback</h2>
+            </div>
+          </div>
+          <pre id="api-feedback" class="feedback-panel">Ready.</pre>
+        </section>
+      </section>
+    </div>
+
+    <div id="evidence-modal" class="evidence-modal is-hidden" aria-hidden="true">
+      <div class="evidence-backdrop" data-close-modal="true"></div>
+      <div class="evidence-dialog" role="dialog" aria-modal="true" aria-labelledby="evidence-title">
+        <div class="evidence-header">
+          <div>
+            <p class="panel-kicker">Context Window</p>
+            <h2 id="evidence-title">Evidence</h2>
+            <p id="evidence-summary" class="evidence-summary">
+              Signed context and verification details will appear here.
+            </p>
+          </div>
+          <button id="close-evidence" class="icon-button" type="button">
+            Close
+          </button>
+        </div>
+
+        <div class="evidence-scroll">
+          <div id="evidence-switcher" class="evidence-switcher"></div>
+          <div id="evidence-market" class="market-window is-hidden"></div>
+          <pre id="evidence-json" class="evidence-json"></pre>
+        </div>
+      </div>
+    </div>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
