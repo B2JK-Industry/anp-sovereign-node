@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "maxNodeModuleJsDepth": 0
+  },
+  "include": [
+    "*.js"
+  ],
+  "exclude": [
+    "backend/node_modules",
+    ".tools"
+  ]
+}

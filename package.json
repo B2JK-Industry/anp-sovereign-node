@@ -1,0 +1,28 @@
+{
+  "name": "anp-node",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sovereign ANP/ACP node with an Express backend and static frontend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/src/server.js",
+    "dev": "node --watch backend/src/server.js",
+    "start:local": "./scripts/agent-start-local.sh",
+    "dev:local": "./scripts/agent-dev-local.sh",
+    "agent:start": "./scripts/agent-start-local.sh",
+    "agent:dev": "./scripts/agent-dev-local.sh",
+    "backend:start": "./scripts/backend-start-local.sh",
+    "backend:dev": "./scripts/backend-dev-local.sh"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.14.0",
+    "ethers": "^6.16.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "vercel": "^50.33.1"
+  }
+}
