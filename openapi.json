@@ -1,0 +1,323 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ANP Sovereign Node API",
+    "version": "1.0.0",
+    "description": "Public API for the sovereign ANP/ACP node dashboard, vault inspection, demo data, listing discovery, bid creation, and ACP preparation."
+  },
+  "servers": [
+    {
+      "url": "https://anp-sovereign-node.vercel.app"
+    }
+  ],
+  "paths": {
+    "/api/meta": {
+      "get": {
+        "summary": "API capability manifest",
+        "responses": {
+          "200": {
+            "description": "Machine-readable API overview"
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "Service health"
+          }
+        }
+      }
+    },
+    "/api/status": {
+      "get": {
+        "summary": "Runtime status",
+        "responses": {
+          "200": {
+            "description": "Wallet, discovery, settlement, and vault summary"
+          }
+        }
+      }
+    },
+    "/api/vault": {
+      "get": {
+        "summary": "Vault summary or full snapshot",
+        "parameters": [
+          {
+            "name": "full",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1"
+              ]
+            },
+            "description": "Return the full vault snapshot when set to 1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vault contents"
+          }
+        }
+      }
+    },
+    "/api/listings/open": {
+      "get": {
+        "summary": "List open opportunities",
+        "parameters": [
+          {
+            "name": "demo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1"
+              ]
+            },
+            "description": "Force demo listings"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Open listings from live discovery or demo mode"
+          }
+        }
+      }
+    },
+    "/api/listings/scan": {
+      "post": {
+        "summary": "Run hunter scan",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sendBidOnMatch": {
+                    "type": "boolean"
+                  },
+                  "deliverySeconds": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hunter scan results"
+          }
+        }
+      }
+    },
+    "/api/bids": {
+      "post": {
+        "summary": "Create a signed ANP bid",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "listingCid",
+                  "listingHash",
+                  "priceUsdc",
+                  "deliverySeconds",
+                  "message"
+                ],
+                "properties": {
+                  "listingCid": {
+                    "type": "string"
+                  },
+                  "listingHash": {
+                    "type": "string"
+                  },
+                  "priceUsdc": {
+                    "type": "string"
+                  },
+                  "deliverySeconds": {
+                    "type": "integer"
+                  },
+                  "message": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object"
+                      },
+                      {
+                        "type": "array"
+                      }
+                    ]
+                  },
+                  "publish": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Signed bid created"
+          }
+        }
+      }
+    },
+    "/api/acp/jobs/prepare": {
+      "post": {
+        "summary": "Prepare ACP settlement params from an acceptance",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "acceptCid"
+                ],
+                "properties": {
+                  "acceptCid": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Prepared ACP job params"
+          }
+        }
+      }
+    },
+    "/api/acp/jobs/create": {
+      "post": {
+        "summary": "Create an on-chain ACP job from an accepted ANP negotiation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["acceptCid"],
+                "properties": {
+                  "acceptCid": { "type": "string" },
+                  "evaluator": { "type": "string" },
+                  "expiredAt": { "type": "string" },
+                  "description": { "type": "string" },
+                  "hook": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Job created on Base with jobId and txHash" }
+        }
+      }
+    },
+    "/api/acp/jobs/fund": {
+      "post": {
+        "summary": "Fund an ACP job by locking USDC in escrow",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["jobId"],
+                "properties": {
+                  "jobId": { "type": "string" },
+                  "amount": { "type": "string", "description": "USDC micro-units. Defaults to job budget." }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Job funded with txHash" }
+        }
+      }
+    },
+    "/api/acp/jobs/submit": {
+      "post": {
+        "summary": "Provider submits a deliverable for an ACP job",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["jobId", "deliverable"],
+                "properties": {
+                  "jobId": { "type": "string" },
+                  "deliverable": { "type": "string", "description": "Deliverable reference (hashed to bytes32)" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Work submitted with txHash and deliverableHash" }
+        }
+      }
+    },
+    "/api/acp/jobs/evaluate": {
+      "post": {
+        "summary": "Evaluator approves or rejects submitted work",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["jobId", "decision"],
+                "properties": {
+                  "jobId": { "type": "string" },
+                  "decision": { "type": "string", "enum": ["approve", "reject"] },
+                  "reason": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Job completed or rejected with txHash" }
+        }
+      }
+    },
+    "/api/demo/listings": {
+      "get": {
+        "summary": "Return deterministic demo listings",
+        "responses": {
+          "200": {
+            "description": "Demo listings"
+          }
+        }
+      }
+    },
+    "/api/demo/seed": {
+      "post": {
+        "summary": "Seed demo data",
+        "responses": {
+          "200": {
+            "description": "Demo data already present"
+          },
+          "201": {
+            "description": "Demo data seeded"
+          }
+        }
+      }
+    }
+  }
+}
