@@ -22,3 +22,7 @@ negotiation_vault.json.migrated
 package-lock.json
 backend/package-lock.json
 .claude/
+
+# stray nested copies (real repos live elsewhere)
+Agent_Life_Space/
+agent/
